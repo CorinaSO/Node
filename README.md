@@ -10,7 +10,7 @@ Fichero main.js, código donde se pone en marcha el servidor pendiente de recibi
 
 Se ha experimentado con el módulo jpv para la validación del formato de los datos recibidos. Si se quiere probar habrá que realiza la instalación del módulo desde el terminal mediante la instrucción:
 
-# npm install jpv
+npm install jpv
 
 Deberemos descomentar las líneas que van de la 11 - 16
 /* const jpv = require("jpv");
