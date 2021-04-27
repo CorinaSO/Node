@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Insertar en base de datos</title>
+    <style>
+      .titulo {
+        text-align: center;
+        padding: 20px 0;
+        margin: auto;
+      }
+      #usuariosForm {
+        width: 30%;
+        border-radius: 5px;
+        padding: 20px;
+        margin: auto;
+      }
+
+      fieldset {
+        margin: 20px auto;
+        background-color: #f2f2f2;
+        padding: 20px;
+        width: 60%;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        background-color: rgb(76, 91, 175);
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        outline: none;
+        font-weight: bold;
+      }
+
+      input[type="submit"]:hover {
+        background-color: rgba(76, 91, 175, 0.8);
+      }
+
+      input[type="text"]:focus {
+        outline: none;
+        border: 3px solid rgb(67, 223, 235);
+      }
+
+      h1 {
+        text-align: center;
+      }
+      .rojo {
+        color: rgb(255, 0, 0);
+      }
+
+      .verde {
+        color: rgb(0, 128, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="titulo">Insertar usuarios de BBDD MongoDB</h1>
+    <form id="usuariosForm">
+      <fieldset>
+        <label for="name">Introduzca su nombre:</label><br />
+        <input
+          type="text"
+          name="name"
+          id="nombre"
+          placeholder="Carlos"
+          required="required"
+          onfocus="eliminarMensaje()"
+        /><br />
+        <label for="phone">Introduzca el teléfono:</label><br />
+        <input
+          type="text"
+          name="phone"
+          id="telef"
+          placeholder="928233561"
+          required="required"
+          onfocus="eliminarMensaje()"
+        /><br /><br />
+        <input type="submit" value="Insertar Usuario" />
+      </fieldset>
+    </form>
+  </body>
+  <script>
+    const mostrarMensaje = (texto, color) => {
+      const h1 = document.createElement("h1");
+      h1.setAttribute("id", "mensaje");
+      h1.style.color = color;
+      h1.innerHTML = texto;
+      document.body.appendChild(h1);
+    };
+
+    const urlencodeFormData = (fd) => {
+      var params = new URLSearchParams();
+      for (var pair of fd.entries()) {
+        typeof pair[1] == "string" && params.append(pair[0], pair[1]);
+      }
+      return params.toString();
+    };
+
+    const eliminarMensaje = () => {
+      const mensaje = document.getElementById("mensaje");
+      if (mensaje) {
+        mensaje.parentNode.removeChild(mensaje);
+      }
+    };
+
+    async function enviarPeticion() {
+      await fetch("http://localhost:3000/ruta", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: urlencodeFormData(
+          new FormData(document.getElementById("usuariosForm"))
+        ),
+      })
+        .then(function (response) {
+          if (response.ok) {
+            return response.text();
+          }
+        })
+        .then(function (text) {
+          mostrarMensaje(text, "green");
+        })
+        .catch(function (error) {
+          mostrarMensaje(error, "red");
+        });
+    }
+
+    document
+      .getElementById("usuariosForm")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+        enviarPeticion();
+      });
+  </script>
+</html>
